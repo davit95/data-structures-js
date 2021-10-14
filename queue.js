@@ -9,46 +9,43 @@ class Node {
   }
 }
 
-class Stack {
+class Queue {
   // creates a new Node
   constructor(value) {
     const newNode = new Node(value);
-    this.top = value ? newNode : null;
+    this.first = value ? newNode : null;
+    this.last = value ? newNode : null;
     this.length = value ? 1 : 0;
   }
 
-  // creates a new Node. Add Node to the top
-  push(value) {
+  // creates a new Node. Add Node to the queue
+  enqueue(value) {
     const newNode = new Node(value);
     if (this.length === 0) {
-      this.top = newNode;
+      this.first = newNode;
+      this.last = newNode;
     } else {
-      newNode.next = this.top;
-      this.top = newNode;
+      this.last.next = newNode;
+      this.last = newNode;
     }
     this.length++;
     return this;
   }
 
-  // remove last item
-  pop() {
+  // remove item
+  dequeue() {
     if (this.length === 0) {
       return undefined;
     }
-    let temp = this.top;
-    this.top = this.top.next;
-    temp.next = null;
+    let temp = this.first;
+    if (this.length === 1) {
+      this.first = null;
+      this.last = null;
+    } else {
+      this.first = this.first.next;
+      this.first.next = null;
+    }
     this.length--;
     return temp;
-  }
-
-  // check if stack is empty
-  isEmpty() {
-    return this.length === 0;
-  }
-
-  // get stack size
-  size() {
-    return this.length;
   }
 }
