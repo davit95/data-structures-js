@@ -3,15 +3,15 @@
 * Linked List items in memory can be everywhere. For example arrays placed continuously.
 * Linked list have head - the first item and all items points to the next item. The last item points to null,
 * Comparison with Arrays (O)
-* ------------------| Linked List  |   Arrays   |
-* Pop               |      O(1)     |    O(1)    |
-* Push              |      O(n)     |    O(1)    |
-* Shift             |      O(1)     |    O(n)    |
-* Unshift           |      O(1)     |    O(n)    |
-* Insert            |      O(n)     |    O(n)    |
-* Delete            |      O(n)     |    O(n)    |
-* Lookup by index   |      O(n)     |    O(1)    |
-* Lookup by value   |      O(n)     |    O(n)    |
+* ------------------| Doubly Linked List  |   Arrays   |
+* Pop               |      O(1)           |    O(1)    |
+* Push              |      O(n)           |    O(1)    |
+* Shift             |      O(1)           |    O(n)    |
+* Unshift           |      O(1)           |    O(n)    |
+* Insert            |      O(n)           |    O(n)    |
+* Delete            |      O(n)           |    O(n)    |
+* Lookup by index   |      O(n)           |    O(1)    |
+* Lookup by value   |      O(n)           |    O(n)    |
 * */
 
 /*
@@ -20,12 +20,13 @@
 * */
 class Node {
   constructor(value){
-    this.value = value;
-    this.next = null;
+    this.value = value
+    this.next = null
+    this.prev = null;
   }
 }
 
-class LinkedList {
+class DoublyLinkedList {
   // creates a new Node
   constructor(value) {
     const newNode = new Node(value);
@@ -36,12 +37,13 @@ class LinkedList {
 
   // creates a new Node. Add Node to the end
   push(value) {
-    const newNode = new Node(value);
+    const newNode = new Node(value)
     if (!this.head) {
       this.head = newNode;
       this.tail = newNode;
     } else {
       this.tail.next = newNode;
+      newNode.prev = this.tail;
       this.tail = newNode;
     }
     this.length++;
@@ -50,22 +52,19 @@ class LinkedList {
 
   // remove last item
   pop() {
-    if (!this.head) {
+    if (this.length === 0) {
       return undefined;
     }
-    let temp = this.head;
-    let prev = this.head;
-    while (temp.next) {
-      prev = temp;
-      temp = temp.next;
-    }
-    this.tail = prev;
-    this.tail.next = null;
-    this.length--;
-    if (this.length === 0) {
-      this.head = null;
+    let temp = this.tail;
+    if (this.length === 1) {
       this.tail = null;
+      this.head = null;
+    } else {
+      this.tail = this.tail.prev;
+      this.tail.next = null;
+      temp.prev = null;
     }
+    this.length--;
     return temp;
   }
 
@@ -77,6 +76,7 @@ class LinkedList {
       this.tail = newNode;
     } else {
       newNode.next = this.head;
+      this.head.prev = newNode;
       this.head = newNode;
     }
     this.length++;
@@ -89,12 +89,16 @@ class LinkedList {
       return undefined;
     }
     let temp = this.head;
-    this.head = this.head.next;
-    this.length--;
-    if (this.length === 0) {
+    if (this.length === 1) {
+      this.head = null;
       this.tail = null;
+    } else {
+      this.head = this.head.next;
+      this.head.prev = null;
+      temp.next = null;
     }
-    temp.next = null;
+
+    this.length--;
     return temp;
   }
 
@@ -104,8 +108,15 @@ class LinkedList {
       return undefined;
     }
     let temp = this.head;
-    for (let i = 0; i < index; i++) {
-      temp = temp.next;
+    if (index < this.length/2) {
+      for (let i = 0; i < index; i++) {
+        temp = temp.next;
+      }
+    } else {
+      temp = this.tail;
+      for (let i = this.length - 1; i > index; i--) {
+        temp = temp.prev;
+      }
     }
     return temp;
   }
@@ -125,53 +136,39 @@ class LinkedList {
     if (index < 0 || index > this.length) {
       return false;
     }
-    if (index === this.length) {
-      return this.push(value);
-    }
     if (index === 0) {
-      return this.unshift(value);
+      return this.unshift(value)
     }
-    const newNode = new Node(value);
-    const temp = this.get(index - 1);
-    newNode.next = temp.next;
-    temp.next = newNode;
+    if (index === this.length) {
+      return this.push(value)
+    }
+    let newNode = new Node(value);
+    let before = this.get(index - 1);
+    const after = before.next;
+    before.next = newNode;
+    newNode.prev = before;
+    newNode.next = after;
+    after.prev = newNode;
     this.length++;
     return true;
   }
-
   // remove an item from given index
   remove(index) {
-    if (index < 0 || index >= this.length) {
-      return undefined;
+    if (index < 0 || index > this.length) {
+      return false;
     }
     if (index === 0) {
-      return this.shift();
+      return this.shift()
     }
-    if (index === this.length - 1) {
-      return this.pop();
+    if (index === this.length) {
+      return this.pop()
     }
-    const before = this.get(index - 1);
-    const temp = before.next;
-
-    before.next = temp.next;
+    const temp = this.get(index);
+    temp.prev.next = temp.next;
+    temp.next.prev = temp.prev;
+    temp.prev = null;
     temp.next = null;
     this.length--;
     return temp;
-  }
-
-  // reverse the linked list
-  reverse() {
-    let temp = this.head;
-    this.head = this.tail;
-    this.tail = temp;
-    let next = temp.next;
-    let prev = null;
-    for (let i = 0; i < this.length; i++) {
-      next = temp.next;
-      temp.next = prev;
-      prev = temp;
-      temp = next;
-    }
-    return this;
   }
 }
