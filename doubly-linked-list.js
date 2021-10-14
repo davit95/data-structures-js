@@ -1,7 +1,7 @@
 /*
 * *
-* Linked List items in memory can be everywhere. For example arrays placed continuously.
-* Linked list have head - the first item and all items points to the next item. The last item points to null,
+* Doubly Linked List items in memory can be everywhere. For example arrays placed continuously.
+* Doubly Linked list have head - the first item and all items points to the next item. The last item points to null,
 * Comparison with Arrays (O)
 * ------------------| Doubly Linked List  |   Arrays   |
 * Pop               |      O(1)           |    O(1)    |
@@ -20,8 +20,8 @@
 * */
 class Node {
   constructor(value){
-    this.value = value
-    this.next = null
+    this.value = value;
+    this.next = null;
     this.prev = null;
   }
 }
