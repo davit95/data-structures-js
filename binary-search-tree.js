@@ -63,7 +63,7 @@ class BinarySearchTree {
   }
 
   // Breadth first search
-  bfs() {
+  BFS() {
     let currentNode = this.root;
     let results = [];
     let queue = [];
@@ -78,6 +78,53 @@ class BinarySearchTree {
       if (currentNode.right) {
         queue.push(currentNode.right);
       }
+    }
+    return results;
+  }
+
+  // always go left first if it possible, then right
+  DFSPreOrder() {
+    let results = [];
+    function traverse(currentNode) {
+      results.push(currentNode.value);
+      if (currentNode.left) {
+        traverse(currentNode.left);
+      }
+      if (currentNode.right) {
+        traverse(currentNode.right);
+      }
+    }
+    traverse(this.root);
+    return results;
+  }
+
+  //from bottom to end
+  DFSPostOrder() {
+    let results = [];
+    function traverse(currentNode) {
+      if (currentNode.left) {
+        traverse(currentNode.left);
+      }
+      if (currentNode.right) {
+        traverse(currentNode.right);
+      }
+      results.push(currentNode.value);
+    }
+    traverse(this.root);
+    return results;
+  }
+
+  DFSInOrder() {
+    let results = [];
+    function traverse(currentNode) {
+      if (currentNode.left) {
+        traverse(currentNode.left);
+      }
+      traverse(this.root);
+      if (currentNode.right) {
+        traverse(currentNode.right);
+      }
+      results.push(currentNode.value);
     }
     return results;
   }
