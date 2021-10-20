@@ -171,4 +171,21 @@ class DoublyLinkedList {
     this.length--;
     return temp;
   }
+
+  // reverse the doubly linked list
+  reverse() {
+    let temp = this.head;
+    this.head = this.tail;
+    this.tail = temp;
+    let next = temp.next;
+    let prev = null;
+    for (let i = 0; i < this.length; i++) {
+      next = temp.next;
+      temp.next = prev;
+      temp.prev = next;
+      prev = temp;
+      temp = next;
+    }
+    return this;
+  }
 }
