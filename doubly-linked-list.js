@@ -154,13 +154,13 @@ class DoublyLinkedList {
   }
   // remove an item from given index
   remove(index) {
-    if (index < 0 || index > this.length) {
+    if (index < 0 || index >= this.length) {
       return false;
     }
     if (index === 0) {
       return this.shift()
     }
-    if (index === this.length) {
+    if (index === this.length - 1) {
       return this.pop()
     }
     const temp = this.get(index);
